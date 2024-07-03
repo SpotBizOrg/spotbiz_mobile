@@ -1,35 +1,25 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Animated, Easing } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
-  const fadeAnim = React.useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      easing: Easing.ease,
-      useNativeDriver: true,
-    }).start();
-  }, [fadeAnim]);
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.header, { opacity: fadeAnim }]}>
+      <View style={styles.header}>
         <Image
           source={require('../../assets/images/headerImageSignUp.jpg')}
           style={styles.headerImage}
         />
-      </Animated.View>
+      </View>
       <View style={styles.contentContainer}>
         <Image
           source={require('../../assets/images/logo.png')}
           style={styles.logo}
         />
         <Text style={styles.description}>
-          Welcome to our company. We provide the best services to make your life easier.
+          Discover local businesses, find the nearest shops, read reviews, and play games to earn discounts. Your journey to convenience and savings starts here.
         </Text>
         <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.loginButtonText}>Login</Text>
@@ -45,7 +35,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8F5E9',
   },
   header: {
-    height: 550,
+    height: 520,
     backgroundColor: '#FFA726',
     justifyContent: 'center',
     alignItems: 'center',
