@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomAlert from '../components/CustomAlert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -50,7 +51,7 @@ const LoginScreen: React.FC = () => {
 
     setIsLoading(true);
     try {
-      const response = await fetch('https://3bde-104-28-242-99.ngrok-free.app/api/v1/login', {
+      const response = await fetch('http://10.0.2.2:8080/api/v1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,7 +68,12 @@ const LoginScreen: React.FC = () => {
               setAlertMessage(`Please verify the email sent to ${data.email}.`);
               setAlertVisible(true);
             } else if (data.status === 'APPROVED'){
-                navigation.navigate('Game');
+                await AsyncStorage.setItem('userDetails', JSON.stringify(data));
+                navigation.navigate('Home');
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: 'Home' }],
+                });
             }
         } else {
           setAlertType('error');
