@@ -95,7 +95,7 @@ const SignUpScreen: React.FC = () => {
     const requestBody = JSON.stringify(data);
 
     try {
-      const response = await fetch('https://3bde-104-28-242-99.ngrok-free.app/api/v1/customer/register', {
+      const response = await fetch('http://10.0.2.2:8080/api/v1/customer/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
