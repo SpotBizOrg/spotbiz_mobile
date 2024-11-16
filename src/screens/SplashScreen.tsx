@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { View, Image, StyleSheet, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useEffect} from 'react';
+import {View, Image, StyleSheet, ActivityIndicator} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 const SplashScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -8,7 +8,10 @@ const SplashScreen: React.FC = () => {
   useEffect(() => {
     const initializeApp = async () => {
       await new Promise(resolve => setTimeout(resolve, 2000));
-      navigation.replace('Home');
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Home' as never}],
+      });
     };
 
     initializeApp();
@@ -21,7 +24,11 @@ const SplashScreen: React.FC = () => {
           source={require('../../assets/images/logo.png')}
           style={styles.logo}
         />
-        <ActivityIndicator size="large" color="#0D3B66" style={styles.spinner} />
+        <ActivityIndicator
+          size="large"
+          color="#0D3B66"
+          style={styles.spinner}
+        />
       </View>
     </View>
   );

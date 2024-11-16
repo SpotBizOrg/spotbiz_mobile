@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import type {RootStackParamList} from '../types';
 import CustomAlert from '../components/CustomAlert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen: React.FC = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -18,7 +28,7 @@ const LoginScreen: React.FC = () => {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
@@ -56,42 +66,58 @@ const LoginScreen: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({email, password}),
       });
 
       if (response.status === 200) {
         const data = await response.json();
         if (data.role === 'CUSTOMER') {
-            if (data.status === 'PENDING') {
-              setAlertType('notice');
-              setAlertTitle('Email Verification');
-              setAlertMessage(`Please verify the email sent to ${data.email}.`);
-              setAlertVisible(true);
-            } else if (data.status === 'APPROVED'){
-                await AsyncStorage.setItem('userDetails', JSON.stringify(data));
-                navigation.navigate('Home');
-                navigation.reset({
-                  index: 0,
-                  routes: [{ name: 'Home' }],
-                });
-            }
+          if (data.status === 'PENDING') {
+            setAlertType('notice');
+            setAlertTitle('Email Verification');
+            setAlertMessage(`Please verify the email sent to ${data.email}.`);
+            setAlertVisible(true);
+          } else if (data.status === 'APPROVED') {
+            await AsyncStorage.setItem('userDetails', JSON.stringify(data));
+            navigation.navigate('Home');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'Home'}],
+            });
+          }
+        } else if (data.role === 'BUSINESS_OWNER' || data.role === 'ADMIN') {
+          if (data.status === 'PENDING') {
+            setAlertType('notice');
+            setAlertTitle('Business Verification');
+            setAlertMessage(
+              `Please wait until our admin verify your business.`,
+            );
+            setAlertVisible(true);
+          } else if (data.status === 'APPROVED') {
+            await AsyncStorage.setItem('userDetails', JSON.stringify(data));
+            navigation.navigate('BusinessHome');
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'BusinessHome'}],
+            });
+          }
         } else {
           setAlertType('error');
           setAlertTitle('Error');
           setAlertMessage('You are not authorized to access this page.');
           setAlertVisible(true);
         }
-      } else if (response.status === 404){
+      } else if (response.status === 404) {
         setAlertType('error');
         setAlertTitle('Error');
         setAlertMessage('User not found!');
         setAlertVisible(true);
-      }else if (response.status === 401){
-       setAlertType('error');
-       setAlertTitle('Error');
-       setAlertMessage('Invalid credentials!');
-       setAlertVisible(true);
-     } else {
+      } else if (response.status === 401) {
+        setAlertType('error');
+        setAlertTitle('Error');
+        setAlertMessage('Invalid credentials!');
+        setAlertVisible(true);
+      } else {
         setAlertType('error');
         setAlertTitle('Error');
         setAlertMessage('Something went wrong!');
@@ -124,35 +150,45 @@ const LoginScreen: React.FC = () => {
         <View style={styles.form}>
           <Text style={styles.label}>Email</Text>
           <View style={styles.inputContainer}>
-            <Image source={require('../../assets/icons/email-icon.png')} style={styles.inputIcon} />
+            <Image
+              source={require('../../assets/icons/email-icon.png')}
+              style={styles.inputIcon}
+            />
             <TextInput
               placeholder="Enter your email"
               placeholderTextColor="#374151"
               style={styles.input}
               value={email}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setEmail(text);
                 if (emailError) validateInputs();
               }}
               autoCapitalize="none"
             />
           </View>
-          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+          {emailError ? (
+            <Text style={styles.errorText}>{emailError}</Text>
+          ) : null}
           <Text style={styles.label}>Password</Text>
           <View style={styles.inputContainer}>
-            <Image source={require('../../assets/icons/password-icon.png')} style={styles.inputIcon} />
+            <Image
+              source={require('../../assets/icons/password-icon.png')}
+              style={styles.inputIcon}
+            />
             <TextInput
               placeholder="XXXXX"
               placeholderTextColor="#374151"
               secureTextEntry={!isPasswordVisible}
               style={styles.input}
               value={password}
-              onChangeText={(text) => {
+              onChangeText={text => {
                 setPassword(text);
                 if (passwordError) validateInputs();
               }}
             />
-            <TouchableOpacity style={styles.showPasswordButton} onPress={togglePasswordVisibility}>
+            <TouchableOpacity
+              style={styles.showPasswordButton}
+              onPress={togglePasswordVisibility}>
               <Image
                 source={
                   isPasswordVisible
@@ -163,18 +199,30 @@ const LoginScreen: React.FC = () => {
               />
             </TouchableOpacity>
           </View>
-          {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+          {passwordError ? (
+            <Text style={styles.errorText}>{passwordError}</Text>
+          ) : null}
           <View style={styles.optionsContainer}>
             <TouchableOpacity style={styles.forgotPasswordContainer}>
               <Text style={styles.forgotPassword}>Forgot Password?</Text>
             </TouchableOpacity>
           </View>
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={isLoading}>
-            <Text style={styles.loginButtonText}>{isLoading ? 'Logging in...' : 'Login'}</Text>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={handleLogin}
+            disabled={isLoading}>
+            <Text style={styles.loginButtonText}>
+              {isLoading ? 'Logging in...' : 'Login'}
+            </Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.signUpText}>
-          Don’t have an account? <Text style={styles.signUpLink} onPress={() => navigation.navigate('SignUp')}>Sign up</Text>
+          Don’t have an account?{' '}
+          <Text
+            style={styles.signUpLink}
+            onPress={() => navigation.navigate('SignUp')}>
+            Sign up
+          </Text>
         </Text>
       </View>
       <CustomAlert
@@ -217,7 +265,7 @@ const styles = StyleSheet.create({
     marginTop: -50,
     elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
@@ -273,7 +321,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: '50%',
-    transform: [{ translateY: -10 }],
+    transform: [{translateY: -10}],
     marginRight: 10,
   },
   showPasswordIcon: {
