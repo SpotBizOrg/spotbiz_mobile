@@ -1,11 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
 import checkTokenValidity from '../utils/checkTokenValidity';
 import removeToken from '../utils/removeToken';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const SearchResultsScreen = ({ navigation, route }) => {
+import {NavigationProp, RouteProp} from '@react-navigation/native';
+
+type SearchResultsScreenProps = {
+  navigation: NavigationProp<any>;
+  route: RouteProp<{params: {query: string}}, 'params'>;
+};
+
+const SearchResultsScreen = ({navigation, route}: SearchResultsScreenProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
@@ -13,11 +29,11 @@ const SearchResultsScreen = ({ navigation, route }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState('');
   const resultsPerPage = 10;
-  const { query } = route.params;
+  const {query} = route.params;
 
   useEffect(() => {
     const checkSession = async () => {
-      const { isValid, userDetails } = await checkTokenValidity();
+      const {isValid, userDetails} = await checkTokenValidity();
       setIsLoggedIn(isValid);
       setUserDetails(userDetails);
     };
@@ -39,7 +55,7 @@ const SearchResultsScreen = ({ navigation, route }) => {
     navigation.navigate('Login');
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Login' }],
+      routes: [{name: 'Login'}],
     });
   };
 
@@ -50,7 +66,7 @@ const SearchResultsScreen = ({ navigation, route }) => {
   };
 
   const handleSearchPress = () => {
-    navigation.navigate('SearchResult', { query: searchText });
+    navigation.navigate('SearchResult', {query: searchText});
   };
 
   const handleLoadMorePress = () => {
@@ -71,137 +87,8 @@ const SearchResultsScreen = ({ navigation, route }) => {
       image: require('../../assets/business_logos/idealz.png'),
       address: '332/A Galle Road Panadura',
       contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
     },
     {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
-      name: 'Abans',
-      ratings: '⭐⭐⭐',
-      image: require('../../assets/business_logos/abans.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },
-    {
-      name: 'Dealz',
-      ratings: '⭐⭐⭐⭐',
-      image: require('../../assets/business_logos/idealz.png'),
-      address: '332/A Galle Road Panadura',
-      contact: '0777xxxxxx',
-    },{
       name: 'Abans',
       ratings: '⭐⭐⭐',
       image: require('../../assets/business_logos/abans.png'),
@@ -215,29 +102,183 @@ const SearchResultsScreen = ({ navigation, route }) => {
       address: '332/A Galle Road Panadura',
       contact: '0777xxxxxx',
     },
-
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Abans',
+      ratings: '⭐⭐⭐',
+      image: require('../../assets/business_logos/abans.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
+    {
+      name: 'Dealz',
+      ratings: '⭐⭐⭐⭐',
+      image: require('../../assets/business_logos/idealz.png'),
+      address: '332/A Galle Road Panadura',
+      contact: '0777xxxxxx',
+    },
   ];
 
   const displayedResults = searchResults.slice(0, currentPage * resultsPerPage);
   const resultsCount = searchResults.length;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingTop: 100 }}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{paddingTop: 100}}>
       <View style={styles.headerContainer}>
         <View style={styles.header}>
-          <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+          <Image
+            source={require('../../assets/images/logo.png')}
+            style={styles.logo}
+          />
           <View style={styles.nav}>
             {isLoggedIn ? (
               <>
                 <TouchableOpacity style={styles.notificationButton}>
-                  <Image source={require('../../assets/icons/notification-icon.png')} style={styles.notificationIcon} />
+                  <Image
+                    source={require('../../assets/icons/notification-icon.png')}
+                    style={styles.notificationIcon}
+                  />
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.profileButton} onPress={toggleMenu}>
-                  <Image source={require('../../assets/icons/profile-icon.jpg')} style={styles.profileImage} />
+                <TouchableOpacity
+                  style={styles.profileButton}
+                  onPress={toggleMenu}>
+                  <Image
+                    source={require('../../assets/icons/profile-icon.jpg')}
+                    style={styles.profileImage}
+                  />
                 </TouchableOpacity>
               </>
             ) : (
-              <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('Login')}>
+              <TouchableOpacity
+                style={styles.signInButton}
+                onPress={() => navigation.navigate('Login')}>
                 <Text style={styles.signInButtonText}>Sign In</Text>
               </TouchableOpacity>
             )}
@@ -247,10 +288,14 @@ const SearchResultsScreen = ({ navigation, route }) => {
           <View style={styles.menuContainer} pointerEvents="box-none">
             <TouchableOpacity style={styles.menuBackdrop} onPress={toggleMenu}>
               <View style={styles.menu} pointerEvents="box-none">
-                <TouchableOpacity style={styles.menuButton} onPress={handleProfilePress}>
+                <TouchableOpacity
+                  style={styles.menuButton}
+                  onPress={handleProfilePress}>
                   <Text style={styles.menuButtonText}>Profile</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.menuButton} onPress={handleLogoutPress}>
+                <TouchableOpacity
+                  style={styles.menuButton}
+                  onPress={handleLogoutPress}>
                   <Text style={styles.menuButtonText}>Logout</Text>
                 </TouchableOpacity>
               </View>
@@ -258,19 +303,24 @@ const SearchResultsScreen = ({ navigation, route }) => {
           </View>
         )}
         <View style={styles.searchContainer}>
-            <TextInput
-              placeholder="What are you looking for"
-              placeholderTextColor="#605B49"
-              style={styles.searchInput}
-              value={searchText}
-              onChangeText={setSearchText}
+          <TextInput
+            placeholder="What are you looking for"
+            placeholderTextColor="#605B49"
+            style={styles.searchInput}
+            value={searchText}
+            onChangeText={setSearchText}
+          />
+          <TouchableOpacity onPress={handleSearchPress}>
+            <Image
+              source={require('../../assets/icons/search-icon.png')}
+              style={styles.searchIcon}
             />
-            <TouchableOpacity onPress={handleSearchPress}>
-              <Image source={require('../../assets/icons/search-icon.png')} style={styles.searchIcon} />
-            </TouchableOpacity>
-          </View>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Text style={styles.resultsText}>{resultsCount} Search results for "{query}"</Text>
+      <Text style={styles.resultsText}>
+        {resultsCount} Search results for "{query}"
+      </Text>
       <View style={styles.filterContainer}>
         <Text style={styles.filterByText}>Filter by:</Text>
         <TouchableOpacity style={styles.filterButton}>
@@ -290,14 +340,20 @@ const SearchResultsScreen = ({ navigation, route }) => {
             <View style={styles.resultInfo}>
               <Text style={styles.resultName}>{result.name}</Text>
               <Text style={styles.resultRating}>{result.ratings}</Text>
-              {result.address && <Text style={styles.resultAddress}>{result.address}</Text>}
-              {result.contact && <Text style={styles.resultContact}>{result.contact}</Text>}
+              {result.address && (
+                <Text style={styles.resultAddress}>{result.address}</Text>
+              )}
+              {result.contact && (
+                <Text style={styles.resultContact}>{result.contact}</Text>
+              )}
             </View>
           </View>
         ))}
       </View>
       {displayedResults.length < searchResults.length && (
-        <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMorePress}>
+        <TouchableOpacity
+          style={styles.loadMoreButton}
+          onPress={handleLoadMorePress}>
           <Text style={styles.loadMoreButtonText}>Load More</Text>
         </TouchableOpacity>
       )}
@@ -334,51 +390,51 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signInButton: {
-      paddingHorizontal: 20,
-      borderRadius: 10,
-      backgroundColor: '#F4D35E',
-      paddingVertical: 10,
-      alignItems: 'center',
-    },
-    signInButtonText: {
-      color: '#000000',
-      fontWeight: 'bold',
-      fontSize: 15,
-    },
-    notificationButton: {
-      padding: 5,
-    },
-    notificationIcon: {
-      width: 20,
-      height: 20,
-    },
-    profileButton: {
-      paddingHorizontal: 5,
-    },
-    profileImage: {
-      width: 30,
-      height: 30,
-      borderRadius: 15,
-    },
-    searchContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 0,
-      width: '100%',
-      backgroundColor: '#FAF0CA',
-      borderRadius: 24,
-      paddingHorizontal: 16,
-    },
-    searchIcon: {
-      width: 30,
-      height: 30,
-      marginRight: -8,
-    },
-    searchInput: {
-      flex: 1,
-      paddingVertical: 8,
-      color: '#000000',
-    },
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    backgroundColor: '#F4D35E',
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+  signInButtonText: {
+    color: '#000000',
+    fontWeight: 'bold',
+    fontSize: 15,
+  },
+  notificationButton: {
+    padding: 5,
+  },
+  notificationIcon: {
+    width: 20,
+    height: 20,
+  },
+  profileButton: {
+    paddingHorizontal: 5,
+  },
+  profileImage: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 0,
+    width: '100%',
+    backgroundColor: '#FAF0CA',
+    borderRadius: 24,
+    paddingHorizontal: 16,
+  },
+  searchIcon: {
+    width: 30,
+    height: 30,
+    marginRight: -8,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: 8,
+    color: '#000000',
+  },
   resultsText: {
     color: '#555',
     fontSize: 16,
@@ -400,11 +456,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   filterByText: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: '#000',
-      alignSelf: 'center',
-    },
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#000',
+    alignSelf: 'center',
+  },
   filterButtonText: {
     fontWeight: 'bold',
     color: '#000',
@@ -463,34 +519,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   menuContainer: {
-      position: 'absolute',
-      top: 60,
-      right: 20,
-      zIndex: 10,
-      width: 150,
-    },
-    menuBackdrop: {
-      flex: 1,
-    },
-    menu: {
-      position: 'absolute',
-      right: 0,
-      backgroundColor: 'white',
-      borderWidth: 1,
-      borderColor: '#e5e7eb',
-      borderRadius: 8,
-      padding: 0,
-      zIndex: 10,
-      paddingBottom: 10,
-    },
-    menuButton: {
-      paddingTop: 10,
-      paddingHorizontal: 20,
-    },
-    menuButtonText: {
-      fontSize: 16,
-      color: '#000',
-    },
+    position: 'absolute',
+    top: 60,
+    right: 20,
+    zIndex: 10,
+    width: 150,
+  },
+  menuBackdrop: {
+    flex: 1,
+  },
+  menu: {
+    position: 'absolute',
+    right: 0,
+    backgroundColor: 'white',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    borderRadius: 8,
+    padding: 0,
+    zIndex: 10,
+    paddingBottom: 10,
+  },
+  menuButton: {
+    paddingTop: 10,
+    paddingHorizontal: 20,
+  },
+  menuButtonText: {
+    fontSize: 16,
+    color: '#000',
+  },
 });
 
 export default SearchResultsScreen;

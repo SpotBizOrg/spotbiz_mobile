@@ -1,11 +1,24 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, Image, ImageBackground, TextInput, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  ImageBackground,
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import checkTokenValidity from '../utils/checkTokenValidity';
 import removeToken from '../utils/removeToken';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const HomeScreen = ({ navigation }) => {
+import {NavigationProp} from '@react-navigation/native';
+
+const HomeScreen = ({navigation}: {navigation: NavigationProp<any>}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
@@ -14,7 +27,7 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     const checkSession = async () => {
-      const { isValid, userDetails } = await checkTokenValidity();
+      const {isValid, userDetails} = await checkTokenValidity();
       setIsLoggedIn(isValid);
       setUserDetails(userDetails);
     };
@@ -40,7 +53,7 @@ const HomeScreen = ({ navigation }) => {
     navigation.navigate('Login');
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Login' }],
+      routes: [{name: 'Login'}],
     });
   };
 
@@ -51,15 +64,24 @@ const HomeScreen = ({ navigation }) => {
   };
 
   const handleSearchPress = () => {
-    navigation.navigate('SearchResult', { query: searchText });
+    navigation.navigate('SearchResult', {query: searchText});
   };
 
   const categories = [
-    { name: 'Stationery', image: require('../../assets/icons/stationery-icon.png') },
-    { name: 'Hotels', image: require('../../assets/icons/hotel-icon.png') },
-    { name: 'Computer\nShops', image: require('../../assets/icons/computer-icon.png') },
-    { name: 'Food', image: require('../../assets/icons/food-icon.png') },
-    { name: 'Electronic\nShops', image: require('../../assets/icons/electronic-icon.png') },
+    {
+      name: 'Stationery',
+      image: require('../../assets/icons/stationery-icon.png'),
+    },
+    {name: 'Hotels', image: require('../../assets/icons/hotel-icon.png')},
+    {
+      name: 'Computer\nShops',
+      image: require('../../assets/icons/computer-icon.png'),
+    },
+    {name: 'Food', image: require('../../assets/icons/food-icon.png')},
+    {
+      name: 'Electronic\nShops',
+      image: require('../../assets/icons/electronic-icon.png'),
+    },
   ];
 
   if (isLoading) {
@@ -73,26 +95,47 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.banner}>
-        <ImageBackground source={require('../../assets/images/bannerImage.png')} style={styles.bannerImage} />
+        <ImageBackground
+          source={require('../../assets/images/bannerImage.png')}
+          style={styles.bannerImage}
+        />
         <View style={styles.overlay} />
         <View style={styles.headerContainer}>
           <View style={styles.header}>
-            <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+            <Image
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}
+            />
             <View style={styles.nav}>
               {isLoggedIn ? (
                 <>
-                  <TouchableOpacity style={styles.gameButton} onPress={goToGames}>
-                    <Image source={require('../../assets/icons/game-icon.png')} style={styles.gameIcon} />
+                  <TouchableOpacity
+                    style={styles.gameButton}
+                    onPress={goToGames}>
+                    <Image
+                      source={require('../../assets/icons/game-icon.png')}
+                      style={styles.gameIcon}
+                    />
                   </TouchableOpacity>
                   <TouchableOpacity style={styles.notificationButton}>
-                    <Image source={require('../../assets/icons/notification-icon.png')} style={styles.notificationIcon} />
+                    <Image
+                      source={require('../../assets/icons/notification-icon.png')}
+                      style={styles.notificationIcon}
+                    />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.profileButton} onPress={toggleMenu}>
-                    <Image source={require('../../assets/icons/profile-icon.jpg')} style={styles.profileImage} />
+                  <TouchableOpacity
+                    style={styles.profileButton}
+                    onPress={toggleMenu}>
+                    <Image
+                      source={require('../../assets/icons/profile-icon.jpg')}
+                      style={styles.profileImage}
+                    />
                   </TouchableOpacity>
                 </>
               ) : (
-                <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('Login')}>
+                <TouchableOpacity
+                  style={styles.signInButton}
+                  onPress={() => navigation.navigate('Login')}>
                   <Text style={styles.signInButtonText}>Sign In</Text>
                 </TouchableOpacity>
               )}
@@ -100,12 +143,18 @@ const HomeScreen = ({ navigation }) => {
           </View>
           {isMenuVisible && (
             <View style={styles.menuContainer} pointerEvents="box-none">
-              <TouchableOpacity style={styles.menuBackdrop} onPress={toggleMenu}>
+              <TouchableOpacity
+                style={styles.menuBackdrop}
+                onPress={toggleMenu}>
                 <View style={styles.menu} pointerEvents="box-none">
-                  <TouchableOpacity style={styles.menuButton} onPress={handleProfilePress}>
+                  <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={handleProfilePress}>
                     <Text style={styles.menuButtonText}>Profile</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.menuButton} onPress={handleLogoutPress}>
+                  <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={handleLogoutPress}>
                     <Text style={styles.menuButtonText}>Logout</Text>
                   </TouchableOpacity>
                 </View>
@@ -114,8 +163,12 @@ const HomeScreen = ({ navigation }) => {
           )}
         </View>
         <View style={styles.bannerTextContainer}>
-          <Text style={styles.bannerTitle}>Find what you need, Where you need it!</Text>
-          <Text style={styles.bannerSubtitle}>Search for local Businesses tailored to your preferences</Text>
+          <Text style={styles.bannerTitle}>
+            Find what you need, Where you need it!
+          </Text>
+          <Text style={styles.bannerSubtitle}>
+            Search for local Businesses tailored to your preferences
+          </Text>
           <View style={styles.searchContainer}>
             <TextInput
               placeholder="What are you looking for"
@@ -125,33 +178,47 @@ const HomeScreen = ({ navigation }) => {
               onChangeText={setSearchText}
             />
             <TouchableOpacity onPress={handleSearchPress}>
-              <Image source={require('../../assets/icons/search-icon.png')} style={styles.searchIcon} />
+              <Image
+                source={require('../../assets/icons/search-icon.png')}
+                style={styles.searchIcon}
+              />
             </TouchableOpacity>
           </View>
         </View>
       </View>
       <View style={styles.grid}>
-        {categories.map((category) => (
+        {categories.map(category => (
           <View key={category.name} style={styles.gridItem}>
             <Image source={category.image} style={styles.gridImage} />
             <Text style={styles.categoryName}>{category.name}</Text>
           </View>
         ))}
       </View>
-      <Text style={styles.infoText}>Discover latest offers and win vouchers in Sri Lankan shops being at your comfort zones</Text>
+      <Text style={styles.infoText}>
+        Discover latest offers and win vouchers in Sri Lankan shops being at
+        your comfort zones
+      </Text>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>How to Find a Shop and their offers at SpotBiz?</Text>
+        <Text style={styles.cardTitle}>
+          How to Find a Shop and their offers at SpotBiz?
+        </Text>
         <View style={styles.cardContent}>
-          <Text>• Go to SpotBiz website or download the SpotBiz mobile app</Text>
+          <Text>
+            • Go to SpotBiz website or download the SpotBiz mobile app
+          </Text>
           <Text>• Find the shop by searching</Text>
           <Text>• Get updated about their latest offers and discounts</Text>
           <Text>• Play games and earn points</Text>
         </View>
       </View>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>How to Register your Business at SpotBiz?</Text>
+        <Text style={styles.cardTitle}>
+          How to Register your Business at SpotBiz?
+        </Text>
         <View style={styles.cardContent}>
-          <Text>• Go to SpotBiz website or download the SpotBiz mobile app</Text>
+          <Text>
+            • Go to SpotBiz website or download the SpotBiz mobile app
+          </Text>
           <Text>• Register your shop at the relevant category</Text>
           <Text>• Publish your latest offers and discounts</Text>
           <Text>• Buy packages for more services</Text>
@@ -160,7 +227,7 @@ const HomeScreen = ({ navigation }) => {
       </View>
       <Text style={styles.recommendationsTitle}>Recommendations</Text>
       <View style={styles.recommendationsGrid}>
-        {Array.from({ length: 4 }).map((_, index) => (
+        {Array.from({length: 4}).map((_, index) => (
           <View key={index} style={styles.recommendationItem}></View>
         ))}
       </View>
@@ -246,6 +313,14 @@ const styles = StyleSheet.create({
     width: '100%',
     height: height * 0.6,
     resizeMode: 'cover',
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   bannerTextContainer: {
     position: 'absolute',

@@ -1,18 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  StyleSheet,
+  Dimensions,
+  ActivityIndicator,
+} from 'react-native';
 import checkTokenValidity from '../utils/checkTokenValidity';
 import removeToken from '../utils/removeToken';
 
-const { width, height } = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
-const GameGalleryScreen = ({ navigation }) => {
+import {NavigationProp} from '@react-navigation/native';
+
+interface Props {
+  navigation: NavigationProp<any>;
+}
+
+const GameGalleryScreen: React.FC<Props> = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuVisible, setMenuVisible] = useState(false);
 
   useEffect(() => {
     const checkSession = async () => {
-      const { isValid, userDetails } = await checkTokenValidity();
+      const {isValid, userDetails} = await checkTokenValidity();
       setIsLoggedIn(isValid);
     };
 
@@ -29,7 +44,7 @@ const GameGalleryScreen = ({ navigation }) => {
     navigation.navigate('Login');
     navigation.reset({
       index: 0,
-      routes: [{ name: 'Login' }],
+      routes: [{name: 'Login'}],
     });
   };
 
@@ -48,9 +63,8 @@ const GameGalleryScreen = ({ navigation }) => {
       developer: 'GMR Bros',
       description: 'A fun and addictive number merging game.',
       visits: '11M',
-      url: 'https://www.crazygames.com/embed/drop-merge-the-numbers'
+      url: 'https://www.crazygames.com/embed/drop-merge-the-numbers',
     },
-    // Add more game objects here
   ];
 
   return (
@@ -58,19 +72,32 @@ const GameGalleryScreen = ({ navigation }) => {
       <View style={styles.banner}>
         <View style={styles.headerContainer}>
           <View style={styles.header}>
-            <Image source={require('../../assets/images/logo.png')} style={styles.logo} />
+            <Image
+              source={require('../../assets/images/logo.png')}
+              style={styles.logo}
+            />
             <View style={styles.nav}>
               {isLoggedIn ? (
                 <>
                   <TouchableOpacity style={styles.notificationButton}>
-                    <Image source={require('../../assets/icons/notification-icon.png')} style={styles.notificationIcon} />
+                    <Image
+                      source={require('../../assets/icons/notification-icon.png')}
+                      style={styles.notificationIcon}
+                    />
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.profileButton} onPress={toggleMenu}>
-                    <Image source={require('../../assets/icons/profile-icon.jpg')} style={styles.profileImage} />
+                  <TouchableOpacity
+                    style={styles.profileButton}
+                    onPress={toggleMenu}>
+                    <Image
+                      source={require('../../assets/icons/profile-icon.jpg')}
+                      style={styles.profileImage}
+                    />
                   </TouchableOpacity>
                 </>
               ) : (
-                <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('Login')}>
+                <TouchableOpacity
+                  style={styles.signInButton}
+                  onPress={() => navigation.navigate('Login')}>
                   <Text style={styles.signInButtonText}>Sign In</Text>
                 </TouchableOpacity>
               )}
@@ -78,12 +105,18 @@ const GameGalleryScreen = ({ navigation }) => {
           </View>
           {isMenuVisible && (
             <View style={styles.menuContainer} pointerEvents="box-none">
-              <TouchableOpacity style={styles.menuBackdrop} onPress={toggleMenu}>
+              <TouchableOpacity
+                style={styles.menuBackdrop}
+                onPress={toggleMenu}>
                 <View style={styles.menu} pointerEvents="box-none">
-                  <TouchableOpacity style={styles.menuButton} onPress={() => navigation.navigate('Profile')}>
+                  <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={() => navigation.navigate('Profile')}>
                     <Text style={styles.menuButtonText}>Profile</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.menuButton} onPress={handleLogoutPress}>
+                  <TouchableOpacity
+                    style={styles.menuButton}
+                    onPress={handleLogoutPress}>
                     <Text style={styles.menuButtonText}>Logout</Text>
                   </TouchableOpacity>
                 </View>
@@ -94,7 +127,10 @@ const GameGalleryScreen = ({ navigation }) => {
       </View>
       <View style={styles.grid}>
         {games.map((game, index) => (
-          <TouchableOpacity key={index} style={styles.gameCard} onPress={() => navigation.navigate('GameDetail', { game })}>
+          <TouchableOpacity
+            key={index}
+            style={styles.gameCard}
+            onPress={() => navigation.navigate('GameDetail', {game})}>
             <Image source={game.image} style={styles.gameImage} />
             <Text style={styles.gameTitle}>{game.title}</Text>
             <Text style={styles.gameDeveloper}>{game.developer}</Text>
@@ -108,6 +144,13 @@ const GameGalleryScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  banner: {
+    width: '100%',
+    height: 200,
+    backgroundColor: '#f8f9fa',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   container: {
     flex: 1,
   },
@@ -175,7 +218,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,

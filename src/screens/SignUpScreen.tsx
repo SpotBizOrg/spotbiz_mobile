@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, ScrollView, ActivityIndicator } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import CustomAlert from '../components/CustomAlert';
+import {StackNavigationProp} from '@react-navigation/stack';
+import type {RootStackParamList} from '../types';
 
 const SignUpScreen: React.FC = () => {
-  const navigation = useNavigation();
+  type SignUpScreenNavigationProp = StackNavigationProp<
+    RootStackParamList,
+    'SignUp'
+  >;
+
+  const navigation = useNavigation<SignUpScreenNavigationProp>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNo, setPhoneNo] = useState('');
@@ -21,17 +37,18 @@ const SignUpScreen: React.FC = () => {
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
 
-  const validateEmail = (email) => {
+  const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const validatePassword = (password: string) => {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
   };
 
-  const validatePhoneNo = (phoneNo) => {
+  const validatePhoneNo = (phoneNo: string) => {
     const phoneNoRegex = /^(?:\d{10}|\+94\d{9})$/;
     return phoneNoRegex.test(phoneNo);
   };
@@ -70,7 +87,9 @@ const SignUpScreen: React.FC = () => {
       setPasswordError('Password is required.');
       valid = false;
     } else if (!validatePassword(password)) {
-      setPasswordError('Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+      setPasswordError(
+        'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character.',
+      );
       valid = false;
     } else {
       setPasswordError('');
@@ -89,24 +108,29 @@ const SignUpScreen: React.FC = () => {
       phoneNo,
       password,
       role: 'CUSTOMER',
-      status: 'PENDING'
+      status: 'PENDING',
     };
 
     const requestBody = JSON.stringify(data);
 
     try {
-      const response = await fetch('http://10.0.2.2:8080/api/v1/customer/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        'http://10.0.2.2:8080/api/v1/customer/register',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: requestBody,
         },
-        body: requestBody,
-      });
+      );
 
       if (response.status === 200) {
         setAlertType('success');
         setAlertTitle('Registration Successful');
-        setAlertMessage(`A confirmation email has been sent to \n${email}.\nPlease confirm your email to login.`);
+        setAlertMessage(
+          `A confirmation email has been sent to \n${email}.\nPlease confirm your email to login.`,
+        );
         setAlertVisible(true);
       } else if (response.status === 409) {
         setAlertType('notice');
@@ -116,6 +140,7 @@ const SignUpScreen: React.FC = () => {
       } else {
         setAlertType('error');
         setAlertTitle('Error');
+        const responseData = await response.json();
         setAlertMessage(responseData.message || 'Something went wrong.');
         setAlertVisible(true);
       }
@@ -147,76 +172,96 @@ const SignUpScreen: React.FC = () => {
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Name</Text>
             <View style={styles.inputWrapper}>
-              <Image source={require('../../assets/icons/user-icon.png')} style={styles.inputIcon} />
+              <Image
+                source={require('../../assets/icons/user-icon.png')}
+                style={styles.inputIcon}
+              />
               <TextInput
                 placeholder="Enter your name"
                 placeholderTextColor="#374151"
                 style={styles.input}
                 value={name}
-                onChangeText={(text) => {
+                onChangeText={text => {
                   setName(text);
                   if (nameError) validateInputs();
                 }}
                 autoCapitalize="none"
               />
             </View>
-            {nameError ? <Text style={styles.errorText}>{nameError}</Text> : null}
+            {nameError ? (
+              <Text style={styles.errorText}>{nameError}</Text>
+            ) : null}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Email</Text>
             <View style={styles.inputWrapper}>
-              <Image source={require('../../assets/icons/email-icon.png')} style={styles.inputIcon} />
+              <Image
+                source={require('../../assets/icons/email-icon.png')}
+                style={styles.inputIcon}
+              />
               <TextInput
                 placeholder="sample@example.com"
                 placeholderTextColor="#374151"
                 style={styles.input}
                 value={email}
-                onChangeText={(text) => {
+                onChangeText={text => {
                   setEmail(text);
                   if (emailError) validateInputs();
                 }}
                 autoCapitalize="none"
               />
             </View>
-            {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+            {emailError ? (
+              <Text style={styles.errorText}>{emailError}</Text>
+            ) : null}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Phone</Text>
             <View style={styles.inputWrapper}>
-              <Image source={require('../../assets/icons/phone-icon.png')} style={styles.inputIcon} />
+              <Image
+                source={require('../../assets/icons/phone-icon.png')}
+                style={styles.inputIcon}
+              />
               <TextInput
                 placeholder="+94X XXX XXXX"
                 placeholderTextColor="#374151"
                 style={styles.input}
                 value={phoneNo}
-                onChangeText={(text) => {
+                onChangeText={text => {
                   setPhoneNo(text);
                   if (phoneNoError) validateInputs();
                 }}
                 autoCapitalize="none"
               />
             </View>
-            {phoneNoError ? <Text style={styles.errorText}>{phoneNoError}</Text> : null}
+            {phoneNoError ? (
+              <Text style={styles.errorText}>{phoneNoError}</Text>
+            ) : null}
           </View>
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Password</Text>
             <View style={styles.passwordContainer}>
               <View style={styles.inputWrapper}>
-                <Image source={require('../../assets/icons/password-icon.png')} style={styles.inputIcon} />
+                <Image
+                  source={require('../../assets/icons/password-icon.png')}
+                  style={styles.inputIcon}
+                />
                 <TextInput
                   placeholder="Enter new strong password"
                   placeholderTextColor="#374151"
                   secureTextEntry={!isPasswordVisible}
                   style={styles.input}
                   value={password}
-                  onChangeText={(text) => {
+                  onChangeText={text => {
                     setPassword(text);
                     if (passwordError) validateInputs();
                   }}
                   autoCapitalize="none"
                 />
               </View>
-              <TouchableOpacity style={styles.showPasswordButton} onPress={togglePasswordVisibility}>
+              <TouchableOpacity
+                style={styles.showPasswordButton}
+                onPress={togglePasswordVisibility}>
                 <Image
                   source={
                     isPasswordVisible
@@ -227,14 +272,28 @@ const SignUpScreen: React.FC = () => {
                 />
               </TouchableOpacity>
             </View>
-            {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
+            {passwordError ? (
+              <Text style={styles.errorText}>{passwordError}</Text>
+            ) : null}
           </View>
-          <TouchableOpacity style={styles.signupButton} onPress={handleRegistration} disabled={isLoading}>
-            {isLoading ? <ActivityIndicator color="#fff" /> : <Text style={styles.signupButtonText}>Sign Up</Text>}
+          <TouchableOpacity
+            style={styles.signupButton}
+            onPress={handleRegistration}
+            disabled={isLoading}>
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.signupButtonText}>Sign Up</Text>
+            )}
           </TouchableOpacity>
         </View>
         <Text style={styles.loginText}>
-          Already have an account? <Text style={styles.loginLink} onPress={() => navigation.navigate('Login')}>Login</Text>
+          Already have an account?{' '}
+          <Text
+            style={styles.loginLink}
+            onPress={() => navigation.navigate('Login')}>
+            Login
+          </Text>
         </Text>
       </View>
       <CustomAlert
@@ -282,7 +341,7 @@ const styles = StyleSheet.create({
     marginTop: -50,
     elevation: 5,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: {width: 0, height: 2},
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
   },
@@ -340,7 +399,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     top: '50%',
-    transform: [{ translateY: -10 }],
+    transform: [{translateY: -10}],
     marginRight: 10,
   },
   showPasswordIcon: {
