@@ -6,22 +6,30 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  Alert,
-  Image,
   TextInput,
 } from 'react-native';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {RNCamera} from 'react-native-camera';
+import {HashLoader} from 'react-spinners';
+import {format} from 'date-fns';
+
+const BACKEND_URL = 'http://10.0.2.2:8080/api/v1';
 
 const QRCodeScannerPage: React.FC = () => {
   const navigation = useNavigation<any>();
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [discount, setDiscount] = useState<number | null>(null);
+  const [couponId, setcouponId] = useState<number | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isUseModalVisible, setIsUseModalVisible] = useState(true);
+  const [isUseModalVisible, setIsUseModalVisible] = useState(false);
   const [amountError, setAmountError] = useState<string | undefined>(undefined);
   const [amount, setAmount] = useState<number | undefined>(undefined);
+  const [businessId, setBusinessId] = useState<number>(4);
+  const [imageUrl, setimageUrl] = useState<string>(
+    'https://iili.io/20X6XVa.png',
+  );
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleScan = async (e: {data: string}) => {
     const scannedData = e.data;
@@ -30,7 +38,7 @@ const QRCodeScannerPage: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://10.0.2.2:8080/api/v1/coupon/check/${scannedData}`,
+        `${BACKEND_URL}/coupon/check/${scannedData}`,
         {
           method: 'GET',
           headers: {
@@ -47,6 +55,7 @@ const QRCodeScannerPage: React.FC = () => {
         console.log('Coupon Status:', status);
         setStatus(status.toUpperCase());
         setDiscount(discount);
+        setcouponId(result.coupon_id);
       } else {
         setStatus('ERROR');
       }
@@ -60,6 +69,7 @@ const QRCodeScannerPage: React.FC = () => {
     setIsModalVisible(false);
     setStatus(null);
     setScanResult(null);
+    // navigation.navigate('BusinessHomeScreen');
   };
 
   const handleAmountChange = (text: string) => {
@@ -81,11 +91,97 @@ const QRCodeScannerPage: React.FC = () => {
 
   const handleUseClose = () => {
     setIsUseModalVisible(false);
+    navigation.navigate('BusinessHomeScreen');
+  };
+
+  const handleCouponUse = () => {
+    console.log('Amount:', amount, 'businessId:', businessId);
+    setIsUseModalVisible(false);
+    useCoupon();
   };
 
   const handleUse = () => {
-    Alert.alert('Coupon Used', 'You have used the coupon!', [{text: 'OK'}]);
     handleClose();
+    setIsUseModalVisible(true);
+  };
+
+  const handleImageUpload = async (imageFile: string | Blob) => {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+
+    try {
+      const response = await fetch(`${BACKEND_URL}/upload_image`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error uploading image:', errorData);
+        throw new Error(
+          `HTTP error! status: ${response.status}, message: ${
+            errorData.message || 'Unknown error'
+          }`,
+        );
+      }
+
+      const imageUrl = await response.text();
+      console.log('Image URL:', imageUrl);
+      return imageUrl;
+    } catch (error) {
+      console.error('An error occurred during image upload:', error);
+      throw error;
+    }
+  };
+
+  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files.length > 0) {
+  //     const file = e.target.files[0];
+  //     setCouponImage(file);
+  //     setImagePreview(URL.createObjectURL(file));
+  //   }
+  // };
+
+  const useCoupon = async () => {
+    // let imageUrl = "";
+
+    // setLoading(true);
+
+    // if (couponImage) {
+    //   imageUrl = await handleImageUpload(couponImage);
+    // } else {
+    //   setLoading(false);
+    //   throw new Error(`Image is empty`);
+    // }
+
+    const timeStamp = new Date();
+    const discountValue = ((discount ?? 0) / 100) * amount!;
+    console.log(discountValue + ' ' + couponId + ' ' + imageUrl);
+    try {
+      const response = await fetch(`${BACKEND_URL}/scanned_coupon`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          couponId: couponId,
+          dateTime: format(timeStamp, 'yyyy-MM-dd HH:mm:ss'),
+          discount: discountValue,
+          billImage: imageUrl,
+          businessId: businessId,
+        }),
+      });
+
+      if (response.status === 200) {
+        console.log('Coupon used successfully');
+        // navigation.navigate('BusinessHomeScreen');
+      }
+      console.log('Coupon used unsuccessfully: ', response.status);
+    } catch (e) {
+      console.log('An error occured: ' + e);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getStatusMessage = () => {
@@ -167,7 +263,7 @@ const QRCodeScannerPage: React.FC = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.label}>
-              Enter the full amount without discount
+              Enter the full amount without discount (Maximum 1000)
             </Text>
             <View style={styles.inputContainer}>
               <Text style={styles.placeHolderText}> Rs. </Text>
@@ -188,10 +284,20 @@ const QRCodeScannerPage: React.FC = () => {
               <TouchableOpacity style={styles.button} onPress={handleUseClose}>
                 <Text style={styles.buttonText}>Close</Text>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.button} onPress={handleCouponUse}>
+                <Text style={styles.buttonText}>Use</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
       </Modal>
+      <View>
+        {loading && (
+          <View>
+            <HashLoader color="#36d7b7" size={50} />
+          </View>
+        )}
+      </View>
     </View>
   );
 };

@@ -15,7 +15,7 @@ import QRCodeScannerPage from './src/screens/QRCodeScannerPage';
 export type RootStackParamList = {
   Login: undefined;
   Home: {username: string};
-  BusinessHome: undefined;
+  BusinessHomeScreen: undefined;
   Splash: undefined;
   QRCodeScannerPage: undefined;
   SearchResult: undefined;
@@ -29,7 +29,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const App = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="BusinessHome">
+      <Stack.Navigator initialRouteName="BusinessHomeScreen">
         <Stack.Screen
           name="Splash"
           component={SplashScreen}
@@ -41,7 +41,7 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="BusinessHome"
+          name="BusinessHomeScreen"
           component={BusinessHomeScreen}
           options={{headerShown: false}}
         />
